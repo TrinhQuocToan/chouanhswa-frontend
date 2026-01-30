@@ -8,7 +8,7 @@ const Header = () => {
                 <nav className="navbar">
                     <Link to="/" className="logo">
                         <span className="logo-icon">✦</span>
-                        <span className="logo-text">CHOUANHSWA</span>
+                        <span className="logo-text">CHOUANHSWAN</span>
                     </Link>
 
                     <a href="tel:+84961435900" className="phone-contact">
