@@ -60,12 +60,49 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--color-crystal) 0%, var(--color-light-gray) 100%);
+    transition: all var(--transition-normal);
+}
+
+/* Special gradient for "All" category */
+.all-category .category-placeholder {
+    background: linear-gradient(135deg, #f5b5c5 0%, #D4AF37 100%);
+}
+
+/* Add hover effect for category placeholders */
+.category-item:hover .category-placeholder {
+    transform: scale(1.05);
+}
+
+.category-item.active .category-placeholder {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
 }
 
 .category-icon {
     font-size: 2.5rem;
-    color: var(--color-gold);
+    color: #d4699f;
+    filter: drop-shadow(0 2px 3px rgba(212, 105, 159, 0.2));
     animation: sparkle 3s ease-in-out infinite;
+    transition: all var(--transition-fast);
+}
+
+.category-item:hover .category-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.category-item.active .category-icon {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 .category-name {

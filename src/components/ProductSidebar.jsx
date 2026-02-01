@@ -4,6 +4,7 @@ import './ProductSidebar.css';
 
 const ProductSidebar = ({ filters, onFilterChange }) => {
     const [categories, setCategories] = useState([]);
+    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isOpen, setIsOpen] = useState({
         category: true,
         material: true,
@@ -13,6 +14,17 @@ const ProductSidebar = ({ filters, onFilterChange }) => {
 
     useEffect(() => {
         fetchCategories();
+
+        // Collapse all sections on mobile initially
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            setIsOpen({
+                category: false,
+                material: false,
+                color: false,
+                price: false
+            });
+        }
     }, []);
 
     const fetchCategories = async () => {
@@ -52,8 +64,15 @@ const ProductSidebar = ({ filters, onFilterChange }) => {
         onFilterChange({ ...filters, priceRange });
     };
 
+    const toggleMobileFilter = () => {
+        setIsMobileFilterOpen(!isMobileFilterOpen);
+    };
+
     const clearFilters = () => {
         onFilterChange({ category: '', materials: [], colors: [], priceRange: '' });
+        if (window.innerWidth <= 768) {
+            setIsMobileFilterOpen(false);
+        }
     };
 
     const materials = [
@@ -77,138 +96,147 @@ const ProductSidebar = ({ filters, onFilterChange }) => {
     ];
 
     return (
-        <div className="product-sidebar">
-            <div className="sidebar-header">
-                <h3>Bộ Lọc</h3>
-                <button onClick={clearFilters} className="clear-filters">
-                    Xóa tất cả
-                </button>
-            </div>
+        <>
+            {/* Mobile Filter Toggle Button */}
+            <button className="mobile-filter-toggle" onClick={toggleMobileFilter}>
+                <span className="filter-icon">⚙</span>
+                <span>Bộ Lọc</span>
+                <span className={`chevron ${isMobileFilterOpen ? 'open' : ''}`}>▼</span>
+            </button>
 
-            {/* Category Filter */}
-            <div className="filter-section">
-                <button
-                    className="filter-section-header"
-                    onClick={() => toggleSection('category')}
-                >
-                    <span>Loại sản phẩm</span>
-                    <span className={`toggle-icon ${isOpen.category ? 'open' : ''}`}>−</span>
-                </button>
-                {isOpen.category && (
-                    <div className="filter-options">
-                        <label className="filter-option">
-                            <input
-                                type="radio"
-                                name="category"
-                                checked={!filters.category}
-                                onChange={() => handleCategoryChange('')}
-                            />
-                            <span>Tất cả</span>
-                        </label>
-                        {categories.map(category => (
-                            <label key={category._id} className="filter-option">
+            <div className={`product-sidebar ${isMobileFilterOpen ? 'mobile-open' : ''}`}>
+                <div className="sidebar-header">
+                    <h3>Bộ Lọc</h3>
+                    <button onClick={clearFilters} className="clear-filters">
+                        Xóa tất cả
+                    </button>
+                </div>
+
+                {/* Category Filter */}
+                <div className="filter-section">
+                    <button
+                        className="filter-section-header"
+                        onClick={() => toggleSection('category')}
+                    >
+                        <span>Loại sản phẩm</span>
+                        <span className={`toggle-icon ${isOpen.category ? 'open' : ''}`}>−</span>
+                    </button>
+                    {isOpen.category && (
+                        <div className="filter-options">
+                            <label className="filter-option">
                                 <input
                                     type="radio"
                                     name="category"
-                                    checked={filters.category === category._id}
-                                    onChange={() => handleCategoryChange(category._id)}
+                                    checked={!filters.category}
+                                    onChange={() => handleCategoryChange('')}
                                 />
-                                <span>{category.name}</span>
+                                <span>Tất cả</span>
                             </label>
-                        ))}
-                    </div>
-                )}
-            </div>
+                            {categories.map(category => (
+                                <label key={category._id} className="filter-option">
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        checked={filters.category === category._id}
+                                        onChange={() => handleCategoryChange(category._id)}
+                                    />
+                                    <span>{category.name}</span>
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
-            {/* Material Filter */}
-            <div className="filter-section">
-                <button
-                    className="filter-section-header"
-                    onClick={() => toggleSection('material')}
-                >
-                    <span>Chất liệu</span>
-                    <span className={`toggle-icon ${isOpen.material ? 'open' : ''}`}>−</span>
-                </button>
-                {isOpen.material && (
-                    <div className="filter-options">
-                        {materials.map(material => (
-                            <label key={material.value} className="filter-option">
-                                <input
-                                    type="checkbox"
-                                    checked={(filters.materials || []).includes(material.value)}
-                                    onChange={() => handleMaterialChange(material.value)}
-                                />
-                                <span className="material-option">
-                                    <span className="material-icon">{material.icon}</span>
-                                    {material.label}
-                                </span>
-                            </label>
-                        ))}
-                    </div>
-                )}
-            </div>
+                {/* Material Filter */}
+                <div className="filter-section">
+                    <button
+                        className="filter-section-header"
+                        onClick={() => toggleSection('material')}
+                    >
+                        <span>Chất liệu</span>
+                        <span className={`toggle-icon ${isOpen.material ? 'open' : ''}`}>−</span>
+                    </button>
+                    {isOpen.material && (
+                        <div className="filter-options">
+                            {materials.map(material => (
+                                <label key={material.value} className="filter-option">
+                                    <input
+                                        type="checkbox"
+                                        checked={(filters.materials || []).includes(material.value)}
+                                        onChange={() => handleMaterialChange(material.value)}
+                                    />
+                                    <span className="material-option">
+                                        <span className="material-icon">{material.icon}</span>
+                                        {material.label}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
-            {/* Color Filter */}
-            <div className="filter-section">
-                <button
-                    className="filter-section-header"
-                    onClick={() => toggleSection('color')}
-                >
-                    <span>Màu sắc</span>
-                    <span className={`toggle-icon ${isOpen.color ? 'open' : ''}`}>−</span>
-                </button>
-                {isOpen.color && (
-                    <div className="filter-options">
-                        {colors.map(color => (
-                            <label key={color.value} className="filter-option color-option">
-                                <input
-                                    type="checkbox"
-                                    checked={(filters.colors || []).includes(color.value)}
-                                    onChange={() => handleColorChange(color.value)}
-                                />
-                                <span className="color-swatch" style={{ backgroundColor: color.hex }}></span>
-                                <span>{color.label}</span>
-                            </label>
-                        ))}
-                    </div>
-                )}
-            </div>
+                {/* Color Filter */}
+                <div className="filter-section">
+                    <button
+                        className="filter-section-header"
+                        onClick={() => toggleSection('color')}
+                    >
+                        <span>Màu sắc</span>
+                        <span className={`toggle-icon ${isOpen.color ? 'open' : ''}`}>−</span>
+                    </button>
+                    {isOpen.color && (
+                        <div className="filter-options">
+                            {colors.map(color => (
+                                <label key={color.value} className="filter-option color-option">
+                                    <input
+                                        type="checkbox"
+                                        checked={(filters.colors || []).includes(color.value)}
+                                        onChange={() => handleColorChange(color.value)}
+                                    />
+                                    <span className="color-swatch" style={{ backgroundColor: color.hex }}></span>
+                                    <span>{color.label}</span>
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
-            {/* Price Filter */}
-            <div className="filter-section">
-                <button
-                    className="filter-section-header"
-                    onClick={() => toggleSection('price')}
-                >
-                    <span>Khoảng giá</span>
-                    <span className={`toggle-icon ${isOpen.price ? 'open' : ''}`}>−</span>
-                </button>
-                {isOpen.price && (
-                    <div className="filter-options">
-                        <label className="filter-option">
-                            <input
-                                type="radio"
-                                name="price"
-                                checked={!filters.priceRange}
-                                onChange={() => handlePriceChange('')}
-                            />
-                            <span>Tất cả</span>
-                        </label>
-                        {priceRanges.map(range => (
-                            <label key={range.value} className="filter-option">
+                {/* Price Filter */}
+                <div className="filter-section">
+                    <button
+                        className="filter-section-header"
+                        onClick={() => toggleSection('price')}
+                    >
+                        <span>Khoảng giá</span>
+                        <span className={`toggle-icon ${isOpen.price ? 'open' : ''}`}>−</span>
+                    </button>
+                    {isOpen.price && (
+                        <div className="filter-options">
+                            <label className="filter-option">
                                 <input
                                     type="radio"
                                     name="price"
-                                    checked={filters.priceRange === range.value}
-                                    onChange={() => handlePriceChange(range.value)}
+                                    checked={!filters.priceRange}
+                                    onChange={() => handlePriceChange('')}
                                 />
-                                <span>{range.label}</span>
+                                <span>Tất cả</span>
                             </label>
-                        ))}
-                    </div>
-                )}
+                            {priceRanges.map(range => (
+                                <label key={range.value} className="filter-option">
+                                    <input
+                                        type="radio"
+                                        name="price"
+                                        checked={filters.priceRange === range.value}
+                                        onChange={() => handlePriceChange(range.value)}
+                                    />
+                                    <span>{range.label}</span>
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

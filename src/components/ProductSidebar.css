@@ -167,9 +167,74 @@
     }
 }
 
+/* Mobile Filter Toggle Button */
+.mobile-filter-toggle {
+    display: none;
+}
+
 @media (max-width: 768px) {
-    .product-sidebar {
+
+    /* Show mobile filter toggle button */
+    .mobile-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
         padding: var(--spacing-md);
+        background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-rose-gold) 100%);
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-bottom: var(--spacing-md);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+    }
+
+    .mobile-filter-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .mobile-filter-toggle:active {
+        transform: translateY(0);
+    }
+
+    .mobile-filter-toggle .filter-icon {
+        font-size: 1.2rem;
+        margin-right: var(--spacing-xs);
+    }
+
+    .mobile-filter-toggle .chevron {
+        font-size: 0.8rem;
+        transition: transform var(--transition-fast);
+    }
+
+    .mobile-filter-toggle .chevron.open {
+        transform: rotate(180deg);
+    }
+
+    /* Collapsible sidebar on mobile */
+    .product-sidebar {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0;
+        margin-bottom: 0;
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .product-sidebar.mobile-open {
+        max-height: 2000px;
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+        opacity: 1;
+    }
+
+    .sidebar-header {
+        padding-top: var(--spacing-xs);
     }
 
     .sidebar-header h3 {
@@ -178,5 +243,21 @@
 
     .filter-section-header {
         font-size: 1rem;
+    }
+
+    /* Collapse all filter sections by default on mobile */
+    .filter-section {
+        border-bottom: 1px solid var(--color-light-gray);
+    }
+
+    .filter-options {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    /* Add active filter count badge */
+    .sidebar-header::after {
+        content: '';
+        display: none;
     }
 }

@@ -107,16 +107,21 @@
 
 @media (max-width: 768px) {
     .navbar {
-        flex-direction: column;
-        gap: var(--spacing-md);
-        padding: var(--spacing-md) 0;
+        flex-direction: row;
+        justify-content: center;
+        padding: var(--spacing-sm) 0;
     }
 
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .logo-icon {
+        font-size: 1.6rem;
+    }
+
+    /* Hide phone contact on mobile */
     .phone-contact {
-        padding: var(--spacing-xs) var(--spacing-md);
-    }
-
-    .phone-number {
-        font-size: 1rem;
+        display: none;
     }
 }
